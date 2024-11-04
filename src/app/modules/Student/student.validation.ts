@@ -38,6 +38,7 @@ const localGuardianValidationSchema = z.object({
 // Student schema
 const studentValidationSchema = z.object({
   id: z.string().nonempty("Student ID is required"),
+  password: z.string().max(30),
   name: userNameValidationSchema,
   gender: z.enum(["male", "female", "other"], {
     errorMap: () => ({ message: "Gender is required" })
