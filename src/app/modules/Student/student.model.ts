@@ -56,7 +56,16 @@ const StudentSchema = new Schema<TStudent, StudentModel>({
   guardian: { type: GuardianSchema, required: true },
   localGuardian: { type: LocalGuardianSchema, required: true },
   profileImg: { type: String },
-  isActive: { type: String, enum: ["active", "blocked"], required: true }
+  isActive: {
+    type: String,
+    enum: ["active", "blocked"],
+    required: true,
+    default: "active"
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false
+  }
 });
 
 StudentSchema.pre("save", async function(next) {
@@ -65,6 +74,27 @@ StudentSchema.pre("save", async function(next) {
     user.password,
     Number(config.bcrypt_salt_rounds)
   );
+  next();
+});
+
+// when password save return " " password
+StudentSchema.post("save", function(doc, next) {
+  doc.password = "";
+  next();
+});
+
+// Qutry Middleware
+
+StudentSchema.pre("find", function(next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+StudentSchema.pre("findOne", function(next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+StudentSchema.pre("aggregate", function(next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
 });
 
