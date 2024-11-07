@@ -35,39 +35,53 @@ const LocalGuardianSchema = new Schema<TLocalGuardian>({
 });
 
 // Define the Student schema
-const StudentSchema = new Schema<TStudent, StudentModel>({
-  id: { type: String, required: true, unique: true },
-  password: {
-    type: String,
-    required: true,
-    maxlength: [20, "password must be 20 charector"]
+const StudentSchema = new Schema<TStudent, StudentModel>(
+  {
+    id: { type: String, required: true, unique: true },
+    password: {
+      type: String,
+      required: true,
+      maxlength: [20, "password must be 20 charector"]
+    },
+    name: { type: UserNameSchema, required: true },
+    gender: { type: String, enum: ["male", "female", "other"], required: true },
+    email: { type: String, required: true, unique: true },
+    contactNo: { type: String, required: true },
+    emergencyContactNo: { type: String, required: true },
+    bloodGroup: {
+      type: String,
+      enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
+    },
+    presentAddress: { type: String, required: true },
+    permanentAddress: { type: String, required: true },
+    guardian: { type: GuardianSchema, required: true },
+    localGuardian: { type: LocalGuardianSchema, required: true },
+    profileImg: { type: String },
+    isActive: {
+      type: String,
+      enum: ["active", "blocked"],
+      required: true,
+      default: "active"
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false
+    }
   },
-  name: { type: UserNameSchema, required: true },
-  gender: { type: String, enum: ["male", "female", "other"], required: true },
-  email: { type: String, required: true, unique: true },
-  contactNo: { type: String, required: true },
-  emergencyContactNo: { type: String, required: true },
-  bloodGroup: {
-    type: String,
-    enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
-  },
-  presentAddress: { type: String, required: true },
-  permanentAddress: { type: String, required: true },
-  guardian: { type: GuardianSchema, required: true },
-  localGuardian: { type: LocalGuardianSchema, required: true },
-  profileImg: { type: String },
-  isActive: {
-    type: String,
-    enum: ["active", "blocked"],
-    required: true,
-    default: "active"
-  },
-  isDeleted: {
-    type: Boolean,
-    default: false
+  {
+    toJSON: {
+      virtuals: true
+    }
   }
+);
+
+// virtual
+StudentSchema.virtual("fullName").get(function() {
+  return `${this
+    .name.firstName} ${this.name.middleName} ${this.name.lastName} `;
 });
 
+// hasing password
 StudentSchema.pre("save", async function(next) {
   const user = this;
   user.password = await bcrypt.hash(
