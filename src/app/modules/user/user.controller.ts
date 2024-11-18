@@ -1,14 +1,13 @@
-
-
-
+import { Request, Response } from "express";
+import { userServices } from "./user.service";
 
 const createStudent = async (req: Request, res: Response) => {
     try {
-      const { student: studentData } = req.body;
+      const { password,student: studentData } = req.body;
       // data validation using zod
-      const zodParseData = studentValidationSchema.parse(studentData);
+    //   const zodParseData = studentValidationSchema.parse(studentData);
   
-      const result = await StudentServices.createStudentIntoDB(zodParseData);
+      const result = await userServices.createStudentIntoDB(password,studentData);
       // send response
       res.status(200).json({
         success: true,
@@ -23,4 +22,9 @@ const createStudent = async (req: Request, res: Response) => {
         error: error
       });
     }
+  };
+
+
+  export const userControllers = {
+    createStudent
   };
