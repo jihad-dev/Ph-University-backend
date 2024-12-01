@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { StudentServices } from "./student.service";
 import sendResponse from "../../utils/sendResponse";
 
+
 const getAllStudents = async (
   req: Request,
   res: Response,
