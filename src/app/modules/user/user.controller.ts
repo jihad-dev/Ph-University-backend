@@ -1,12 +1,8 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { userServices } from "./user.service";
 import sendResponse from "../../utils/sendResponse";
-import httpStatus from 'http-status'
-const createStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+import httpStatus from "http-status";
+const createStudent : RequestHandler = async (req, res, next) => {
   try {
     const { password, student: studentData } = req.body;
     // data validation using zod
@@ -23,7 +19,6 @@ const createStudent = async (
       message: "Student is created successfully",
       data: result
     });
-  
   } catch (error) {
     next(error);
   }
