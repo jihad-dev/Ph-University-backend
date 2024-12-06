@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 import {
   StudentModel,
   TGuardian,
@@ -46,6 +46,7 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
     name: { type: UserNameSchema, required: true },
     gender: { type: String, enum: ["male", "female", "other"], required: true },
     email: { type: String, required: true, unique: true },
+    dateOfBirth: { type: Date },
     contactNo: { type: String, required: true },
     emergencyContactNo: { type: String, required: true },
     bloodGroup: {
@@ -57,6 +58,10 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
     guardian: { type: GuardianSchema, required: true },
     localGuardian: { type: LocalGuardianSchema, required: true },
     profileImg: { type: String },
+    admissionSemester:{
+      type:Schema.Types.ObjectId,
+      ref:"AcademicSemester"
+    },
     isDeleted: {
       type: Boolean,
       default: false

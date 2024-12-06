@@ -9,11 +9,22 @@ const router = express.Router();
 
 router.post(
   "/create-academic-semester",
-  validateRequest(AcademicSemesterValidations.createAcademicSemesterValidationSchema),
+  validateRequest(
+    AcademicSemesterValidations.createAcademicSemesterValidationSchema
+  ),
   AcademicSemesterControllers.createAcademicSemester
 );
 
-// router.get('/', StudentControllers.getAllStudents)
-// router.get('/:studentId',StudentControllers.getSingleStudent)
-// router.delete('/:studentId',StudentControllers.deleteStudent)
+router.get("/", AcademicSemesterControllers.getAllAcademicSemestersFromDB);
+router.get(
+  "/:semesterId",
+  AcademicSemesterControllers.getSingleAcademicSemesterFromDB
+);
+router.patch(
+  "/:semesterId",
+  validateRequest(
+    AcademicSemesterValidations.updateAcademicSemesterValidationSchema
+  ),
+  AcademicSemesterControllers.updateAcademicSemester
+);
 export const AcademicSemesterRoutes = router;
